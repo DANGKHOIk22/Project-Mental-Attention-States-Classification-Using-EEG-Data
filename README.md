@@ -142,14 +142,14 @@ Channels located closer to the eyes are more susceptible to noise from blinks an
 ### 4.3 Multilayer Perceptron (MLP)
 - **Handling Data Imbalance**:
   1. Select a subset of samples from **label 2** of size:  
-     \[
-     \text{(samples of label 1 + samples of label 2)}/2 \times 1.3
-     \]  
+     
+     (samples of label 1 + samples of label 2)/2 * 1.3
+   
      This prevents the model from overly predicting new samples as **label 2**.
   2. Predict all samples of **label 2**, sort the predictions by accuracy, and extract a subset with the lowest accuracy, maintaining the same size:  
-     \[
-     \text{(samples of label 1 + samples of label 2)}/2 \times 1.3
-     \]  
+     
+     (samples of label 1 + samples of label 2)/2 * 1.3
+     
      Repeat the process of training and predicting iteratively.
 
 ---
