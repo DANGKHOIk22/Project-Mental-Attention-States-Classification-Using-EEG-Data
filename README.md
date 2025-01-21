@@ -50,7 +50,6 @@ Channels located closer to the eyes are more susceptible to noise from blinks an
 - Channels like `AF4`, `AF3`, `FC5`, `T7`, `T8`, `FC6`, `F4`, and `F8` are highly affected by artifacts.  
 - **Decision**: Drop channels `AF3` and `AF4` due to their proximity to the eyes and facial muscles, which makes them more susceptible to noise from blinking, eye movements, and muscle contractions.
 
-**[Link to Preprocessed Data](#)**
 
 ---
 
