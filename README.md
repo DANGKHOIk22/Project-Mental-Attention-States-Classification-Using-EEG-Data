@@ -105,7 +105,7 @@ Channels located closer to the eyes are more susceptible to noise from blinks an
    - **Statistical Features**: Calculate mean, variance, and standard deviation for each channel to create new features.
    - **Continuous Wavelet Transform (CWT)**: Generate **8 additional features per channel** using the Morlet wavelet.
 
-**[Link to Data with Added Features (including CWT)](#)**
+
 
 ---
 
@@ -116,10 +116,98 @@ Channels located closer to the eyes are more susceptible to noise from blinks an
 - **Alpha wave frequency range (8-13 Hz)**: Appears in a state of light relaxation, not stressed but not asleep.
 - **Beta wave frequency range (16-30 Hz)**: Prominent when the brain is highly focused.  
 
-**[Link to Data Signal Conv1d](#)**
+
 
 #### 3.2.2 Method for Creating Image Data
 1. Use the **Cubic Interpolation Algorithm** to calculate the values of empty pixels based on the average values of the waves at the electrodes.
 2. Combine the three images generated for each wave frequency into one composite image.
 
-**[Link to Brain Band Images](#)** 
+
+
+## 4. Model
+
+### 4.1 XGBoost
+- **Handling Data Imbalance**:  
+  - Downsample the majority class using `sklearn.utils.resample`.  
+  - Upsample the minority classes using **SMOTE (Synthetic Minority Oversampling Technique)**.
+
+---
+
+### 4.2 Convolution Neural Network (CNN)
+- **Handling Data Imbalance**:  
+  - Use **class weight** for the loss function.  
+  - Apply **oversampling** to balance the dataset.
+
+---
+
+### 4.3 Multilayer Perceptron (MLP)
+- **Handling Data Imbalance**:
+  1. Select a subset of samples from **label 2** of size:  
+     \[
+     \text{(samples of label 1 + samples of label 2)}/2 \times 1.3
+     \]  
+     This prevents the model from overly predicting new samples as **label 2**.
+  2. Predict all samples of **label 2**, sort the predictions by accuracy, and extract a subset with the lowest accuracy, maintaining the same size:  
+     \[
+     \text{(samples of label 1 + samples of label 2)}/2 \times 1.3
+     \]  
+     Repeat the process of training and predicting iteratively.
+
+---
+
+### 4.4 Stack Classifier
+- **Handling Data Imbalance**:  
+  - Downsample the **drowsy** and **focused** labels to match the number of **unfocused** labels.
+
+---
+
+### 4.5 Comparison of Models
+
+| **Model/Metric**       | **Preprocessed Data** | **Data with Added Features (incl. CWT)** |
+|-------------------------|-----------------------|------------------------------------------|
+| **XGBoost**            | Accuracy: 0.71        | Accuracy: 0.89                           |
+|                         | F1 Score: 0.71       | F1 Score: 0.89                           |
+|                         | AUC Score: 0.88      | AUC Score: 0.96                          |
+| **CNN**                | Accuracy: 0.62        |                                          |
+|                         | F1 Score: 0.63       |                                          |
+|                         | AUC Score: 0.84      |                                          |
+| **MLP**                | Accuracy: 0.58        | Accuracy: 0.83                           |
+|                         | F1 Score: 0.57       | F1 Score: 0.82                           |
+|                         | AUC Score: 0.76      | AUC Score: 0.94                          |
+| **Stack Classifier**    |                       | Accuracy: 0.84                           |
+|                         |                       | F1 Score: 0.84                           |
+|                         |                       | AUC Score: 0.96                          |
+
+- **Insights**:  
+  - XGBoost consistently outperforms the other models on both datasets.  
+  - MLP has the lowest performance across all evaluation metrics.
+
+---
+
+## 5. Challenges and Improvements
+
+### 5.1 Challenges Faced
+1. **Class Imbalance**:  
+   Uneven class labels can bias the model towards the majority class, reducing performance for minority classes.
+2. **Noise in Data**:  
+   EEG signals are often contaminated by noise from muscle movements, eye blinks, and external disruptions, obscuring significant patterns.
+3. **Overfitting**:  
+   Complex models may overfit, especially with limited training data, leading to poor generalization on unseen data.
+4. **Feature Selection**:  
+   High-dimensional datasets can include irrelevant or redundant features, negatively impacting model performance.
+
+---
+
+### 5.2 Strategies to Improve Accuracy
+1. **Preprocessing**:
+   - Employ advanced noise removal techniques, such as **Independent Component Analysis (ICA)**.  
+   - Filter low and high frequencies.
+2. **Addressing Class Imbalance**:
+   - Use oversampling methods like **SMOTE** or undersampling.  
+   - Apply **class-weighting** during model training.
+3. **Feature Engineering**:
+   - Create a brainwave distribution image by extracting features of different wave types.
+   - Use **CWT** and statistical attributes to generate additional features.
+4. **Hyperparameter Optimization**:
+   - Perform grid search to fine-tune model parameters for better performance.
+
