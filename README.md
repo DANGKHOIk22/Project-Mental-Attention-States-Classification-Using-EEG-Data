@@ -83,15 +83,7 @@ Channels located closer to the eyes are more susceptible to noise from blinks an
 - **Definition**:  
   Fourier Transform is the transformation of a function or a signal from the time domain to the frequency domain.
 
-- **Formula**:  
-  - **Discrete Fourier Transform (DFT)**:  
-    \[
-    X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i \frac{2\pi}{N}kn}, \quad k = 0, 1, 2, \dots, N-1
-    \]
-  - **Continuous Fourier Transform (CFT)**:  
-    \[
-    F(\omega) = \int_{-\infty}^{\infty} f(t) \cdot e^{-i\omega t} \, dt
-    \]
+
 
 - **Applications in EEG Processing**:  
   - Brain waves are oscillating signals with multiple frequency components (Delta, Theta, Alpha, Beta, Gamma), each corresponding to specific brain functions.
@@ -101,11 +93,6 @@ Channels located closer to the eyes are more susceptible to noise from blinks an
 - **Definition**:  
   The Continuous Wavelet Transform (CWT) analyzes time-domain signals and provides information in both time and frequency domains.
 
-- **Formula**:  
-  \[
-  W(a, b) = \int_{-\infty}^{\infty} f(t) \cdot \psi^*\left(\frac{t-b}{a}\right) \, dt
-  \]  
-  where \(a > 0\) is the scale parameter, and \(b\) is the position parameter.
 
 - **Applications in EEG Processing**:  
   CWT provides simultaneous time-frequency information, detects local changes, and captures complex features like amplitude and frequency variations.
